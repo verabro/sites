@@ -1,53 +1,625 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sites</title>
+    <meta
+      name="description"
+      content="Честная страница о том, почему изучать нейросети с нуля сложно, и как пройти первые недели без паники."
+    >
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23eff1e8'/%3E%3Cpath d='M15 41 30 18l19 28' fill='none' stroke='%23171717' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='30' cy='18' r='5' fill='%23f24e7a'/%3E%3Ccircle cx='15' cy='41' r='5' fill='%2323b8d6'/%3E%3Ccircle cx='49' cy='46' r='5' fill='%23a86133'/%3E%3C/svg%3E"
+    >
+    <title>Нейросети с нуля - это сложно</title>
     <style>
       :root {
-        color-scheme: light dark;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --ink: #171717;
+        --paper: #eff1e8;
+        --chalk: #fafbf4;
+        --cyan: #23b8d6;
+        --pink: #f24e7a;
+        --oxide: #a86133;
+        --moss: #6f8d56;
+        --line: rgba(23, 23, 23, 0.16);
+        --shadow: 0 22px 70px rgba(23, 23, 23, 0.18);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
       }
 
       body {
-        min-height: 100vh;
         margin: 0;
-        display: grid;
-        place-items: center;
-        background: #f7f7f2;
-        color: #202124;
+        font-family: "Avenir Next", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--paper);
+        color: var(--ink);
       }
 
-      main {
-        width: min(720px, calc(100vw - 40px));
+      body::selection {
+        background: var(--pink);
+        color: var(--chalk);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .site-shell {
+        overflow: hidden;
+      }
+
+      .hero {
+        position: relative;
+        min-height: 92vh;
+        display: grid;
+        align-items: end;
+        padding: 28px clamp(18px, 4vw, 64px) clamp(40px, 7vw, 88px);
+        background:
+          linear-gradient(115deg, rgba(239, 241, 232, 0.86), rgba(239, 241, 232, 0.34) 56%, rgba(35, 184, 214, 0.22)),
+          radial-gradient(circle at 84% 20%, rgba(242, 78, 122, 0.26), transparent 32%),
+          var(--paper);
+        border-bottom: 1px solid var(--line);
+      }
+
+      #neural-map {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.95;
+      }
+
+      .topbar {
+        position: absolute;
+        z-index: 2;
+        top: 22px;
+        left: clamp(18px, 4vw, 64px);
+        right: clamp(18px, 4vw, 64px);
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.78rem;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .topbar span {
+        padding: 8px 10px;
+        background: rgba(250, 251, 244, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        backdrop-filter: blur(14px);
+      }
+
+      .hero-copy {
+        position: relative;
+        z-index: 1;
+        width: min(980px, 100%);
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 20px;
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.84rem;
+        font-weight: 700;
+        color: var(--oxide);
+        text-transform: uppercase;
+      }
+
+      .kicker::before {
+        content: "";
+        width: 34px;
+        height: 2px;
+        background: var(--pink);
       }
 
       h1 {
-        margin: 0 0 12px;
-        font-size: clamp(2.5rem, 8vw, 5rem);
-        line-height: 0.95;
-      }
-
-      p {
+        max-width: 920px;
         margin: 0;
-        max-width: 560px;
-        font-size: 1.125rem;
-        line-height: 1.6;
+        font-family: "Arial Black", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-size: clamp(3rem, 10vw, 8.5rem);
+        line-height: 0.92;
+        font-weight: 700;
       }
 
-      @media (prefers-color-scheme: dark) {
-        body {
-          background: #151713;
-          color: #f2f2ea;
+      .hero-text {
+        max-width: 690px;
+        margin: 26px 0 0;
+        font-size: clamp(1.05rem, 2.1vw, 1.45rem);
+        line-height: 1.6;
+        font-weight: 600;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 34px;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 46px;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 18px;
+        border: 1px solid var(--ink);
+        border-radius: 6px;
+        color: var(--ink);
+        font-weight: 800;
+        text-decoration: none;
+        background: var(--chalk);
+        box-shadow: 5px 5px 0 var(--ink);
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+      }
+
+      .button:hover,
+      .button:focus-visible {
+        transform: translate(3px, 3px);
+        box-shadow: 2px 2px 0 var(--ink);
+        background: #ffffff;
+      }
+
+      .button:focus-visible,
+      .note:focus-within {
+        outline: 3px solid var(--cyan);
+        outline-offset: 3px;
+      }
+
+      .button.secondary {
+        background: transparent;
+        box-shadow: none;
+      }
+
+      main {
+        background: var(--chalk);
+      }
+
+      .section {
+        padding: clamp(64px, 9vw, 120px) clamp(18px, 5vw, 72px);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .section-inner {
+        width: min(1160px, 100%);
+        margin: 0 auto;
+      }
+
+      .section-title {
+        display: grid;
+        grid-template-columns: minmax(0, 0.82fr) minmax(240px, 0.5fr);
+        gap: clamp(24px, 5vw, 70px);
+        align-items: end;
+        margin-bottom: clamp(34px, 5vw, 62px);
+      }
+
+      h2 {
+        margin: 0;
+        font-family: "Arial Black", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-size: clamp(2rem, 5vw, 4.5rem);
+        line-height: 1;
+      }
+
+      .section-title p,
+      .wide-text {
+        margin: 0;
+        font-size: clamp(1rem, 1.6vw, 1.18rem);
+        line-height: 1.75;
+      }
+
+      .pain-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .note {
+        min-height: 248px;
+        padding: 22px;
+        border: 1px solid var(--ink);
+        border-radius: 8px;
+        background: var(--paper);
+        box-shadow: 8px 8px 0 rgba(23, 23, 23, 0.12);
+      }
+
+      .note strong {
+        display: block;
+        margin-bottom: 18px;
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.85rem;
+        color: var(--oxide);
+        text-transform: uppercase;
+      }
+
+      .note h3 {
+        margin: 0 0 12px;
+        font-size: 1.38rem;
+        line-height: 1.14;
+      }
+
+      .note p {
+        margin: 0;
+        line-height: 1.65;
+      }
+
+      .path {
+        display: grid;
+        grid-template-columns: minmax(0, 0.55fr) minmax(0, 1fr);
+        gap: clamp(28px, 6vw, 84px);
+        align-items: start;
+      }
+
+      .path-marker {
+        position: sticky;
+        top: 32px;
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background:
+          linear-gradient(135deg, rgba(35, 184, 214, 0.2), transparent 44%),
+          var(--paper);
+        box-shadow: var(--shadow);
+      }
+
+      .path-marker p {
+        margin: 0;
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        line-height: 1.7;
+      }
+
+      .steps {
+        display: grid;
+        gap: 18px;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 98px minmax(0, 1fr);
+        gap: 22px;
+        padding: 0 0 28px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .step:last-child {
+        border-bottom: 0;
+      }
+
+      .step-code {
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        color: var(--pink);
+        font-weight: 700;
+      }
+
+      .step h3 {
+        margin: 0 0 8px;
+        font-size: 1.45rem;
+      }
+
+      .step p {
+        margin: 0;
+        line-height: 1.7;
+      }
+
+      .manifesto {
+        background: var(--ink);
+        color: var(--chalk);
+      }
+
+      .manifesto .section-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 0.8fr) minmax(280px, 0.45fr);
+        gap: clamp(28px, 6vw, 78px);
+        align-items: center;
+      }
+
+      .manifesto h2 {
+        color: var(--chalk);
+      }
+
+      .quote-stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .quote-stack span {
+        display: block;
+        padding: 14px 16px;
+        border: 1px solid rgba(250, 251, 244, 0.18);
+        border-radius: 6px;
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        color: #dfe8d4;
+      }
+
+      footer {
+        padding: 26px clamp(18px, 5vw, 72px);
+        background: var(--paper);
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.82rem;
+      }
+
+      @media (max-width: 900px) {
+        .section-title,
+        .path,
+        .manifesto .section-inner {
+          grid-template-columns: 1fr;
+        }
+
+        .pain-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .path-marker {
+          position: static;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .hero {
+          min-height: 88vh;
+          padding-top: 96px;
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+
+        .hero-actions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .button {
+          width: 100%;
+        }
+
+        .step {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
         }
       }
     </style>
   </head>
   <body>
-    <main>
-      <h1>Sites</h1>
-      <p>This repository is ready for GitHub Pages. Replace this page with your next website when you are ready.</p>
-    </main>
+    <div class="site-shell">
+      <header class="hero">
+        <canvas id="neural-map" aria-hidden="true"></canvas>
+        <div class="topbar" aria-label="Контекст сайта">
+          <span>старт: ноль</span>
+          <span>режим: много непонятных слов</span>
+        </div>
+        <div class="hero-copy">
+          <p class="kicker">честная карта входа</p>
+          <h1>Нейросети с нуля - это сложно</h1>
+          <p class="hero-text">
+            Не потому что вы не справляетесь. Просто на входе вас встречают математика,
+            код, странные термины, чужие статьи и ощущение, что все остальные уже давно поняли.
+          </p>
+          <div class="hero-actions" aria-label="Навигация по странице">
+            <a class="button" href="#why">Почему так тяжело</a>
+            <a class="button secondary" href="#path">С чего начать спокойно</a>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="section" id="why">
+          <div class="section-inner">
+            <div class="section-title">
+              <h2>Сложность не в одной теме. Она наваливается слоями.</h2>
+              <p>
+                Новичок часто думает, что изучает одну вещь: нейросети. На деле он одновременно
+                учится читать документацию, писать код, понимать данные и не теряться в формулах.
+              </p>
+            </div>
+
+            <div class="pain-grid" aria-label="Основные трудности">
+              <article class="note">
+                <strong>слой 01</strong>
+                <h3>Термины звучат как пароль</h3>
+                <p>
+                  Тензоры, признаки, функции потерь, embeddings. Пока слова не стали привычными,
+                  кажется, что дверь закрыта изнутри.
+                </p>
+              </article>
+              <article class="note">
+                <strong>слой 02</strong>
+                <h3>Код ломается раньше идеи</h3>
+                <p>
+                  Ошибка в окружении, версиях библиотек или данных может выглядеть как провал
+                  в понимании. Чаще это просто обычная настройка.
+                </p>
+              </article>
+              <article class="note">
+                <strong>слой 03</strong>
+                <h3>Прогресс почти невидим</h3>
+                <p>
+                  Первые победы маленькие: запустилась модель, ушла ошибка, график стал понятнее.
+                  Но именно из них складывается уверенность.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="path">
+          <div class="section-inner path">
+            <aside class="path-marker" aria-label="Напоминание">
+              <p>
+                Не пытайтесь сразу стать исследователем. Сначала соберите рабочий маршрут:
+                данные -> код -> модель -> ошибка -> вывод.
+              </p>
+            </aside>
+
+            <div class="steps">
+              <div class="step">
+                <div class="step-code">input</div>
+                <div>
+                  <h3>Выберите одну простую задачу</h3>
+                  <p>
+                    Классификация картинок, прогноз числа или чат с документом. Одна задача
+                    держит внимание лучше, чем десять открытых курсов.
+                  </p>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-code">train</div>
+                <div>
+                  <h3>Запускайте готовые примеры руками</h3>
+                  <p>
+                    Не переписывайте теорию бесконечно. Меняйте параметры, ломайте пример,
+                    возвращайте обратно и смотрите, что изменилось.
+                  </p>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-code">debug</div>
+                <div>
+                  <h3>Ведите дневник ошибок</h3>
+                  <p>
+                    Каждая непонятная ошибка сегодня - это быстрый ответ через неделю.
+                    Записывайте причину, решение и короткий вывод человеческим языком.
+                  </p>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-code">repeat</div>
+                <div>
+                  <h3>Повторяйте маленький цикл</h3>
+                  <p>
+                    Понимание приходит не одним большим озарением, а серией аккуратных повторов:
+                    запустил, посмотрел, объяснил себе, улучшил.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section manifesto">
+          <div class="section-inner">
+            <div>
+              <p class="kicker">главная мысль</p>
+              <h2>Если тяжело, это не сигнал остановиться. Это нормальная цена входа.</h2>
+            </div>
+            <div class="quote-stack" aria-label="Короткие выводы">
+              <span>Путаница - часть маршрута.</span>
+              <span>Ошибки окружения не равны вашей неспособности.</span>
+              <span>Нейросети становятся понятными через практику, а не через стыд.</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        Сделано как честная стартовая страница для тех, кто учит нейросети с нуля.
+      </footer>
+    </div>
+
+    <script>
+      const canvas = document.querySelector('#neural-map');
+      const ctx = canvas.getContext('2d');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const colors = ['#23b8d6', '#f24e7a', '#a86133', '#6f8d56'];
+      let nodes = [];
+      let frame = 0;
+
+      function resize() {
+        const ratio = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(canvas.clientWidth * ratio);
+        canvas.height = Math.floor(canvas.clientHeight * ratio);
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        buildNodes();
+        draw();
+      }
+
+      function buildNodes() {
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        const count = Math.max(42, Math.floor(width * height / 24000));
+        nodes = Array.from({ length: count }, (_, index) => {
+          const column = index % 7;
+          const row = Math.floor(index / 7);
+          return {
+            x: (column / 6) * width + (Math.random() - 0.5) * 90,
+            y: (row / Math.ceil(count / 7)) * height + 80 + (Math.random() - 0.5) * 130,
+            r: 2 + Math.random() * 4,
+            vx: (Math.random() - 0.5) * 0.22,
+            vy: (Math.random() - 0.5) * 0.22,
+            color: colors[index % colors.length]
+          };
+        });
+      }
+
+      function draw() {
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        ctx.clearRect(0, 0, width, height);
+
+        ctx.lineWidth = 1;
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const a = nodes[i];
+            const b = nodes[j];
+            const distance = Math.hypot(a.x - b.x, a.y - b.y);
+            if (distance < 155) {
+              ctx.globalAlpha = Math.max(0, 0.25 - distance / 620);
+              ctx.strokeStyle = '#171717';
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        ctx.globalAlpha = 1;
+        nodes.forEach((node, index) => {
+          const pulse = Math.sin(frame / 35 + index) * 0.9;
+          ctx.fillStyle = node.color;
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, node.r + pulse, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (!reduceMotion) {
+            node.x += node.vx;
+            node.y += node.vy;
+            if (node.x < -20 || node.x > width + 20) node.vx *= -1;
+            if (node.y < -20 || node.y > height + 20) node.vy *= -1;
+          }
+        });
+
+        frame += 1;
+        if (!reduceMotion) requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+    </script>
   </body>
 </html>
